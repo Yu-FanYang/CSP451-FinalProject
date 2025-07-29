@@ -4,7 +4,7 @@
 
 
 ## Overview of system
-## Setup instructions (manual and via CI/CD
+## Setup instructions (manual and via CI/CD
 ## Service roles and communication
 ## Queue/event message formats
 ## Log sample with correlation ID
