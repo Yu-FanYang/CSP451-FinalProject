@@ -25,6 +25,8 @@ I choose Azure Storage Queue to implement this project.
 
 
 
+
+
 ## Task2: CI/CD Automation
 ### 1. Use GitHub Actions, Azure Pipelines, or GitLab CI to:
 - Build Docker images
