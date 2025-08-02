@@ -55,14 +55,14 @@ jobs:
           
           docker login ${{ secrets.ACR_LOGIN_SERVER }} -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }}
 
-          docker compose down --remove-orphans
+
           
-          #cd ~
-          #mkdir -p final-project/supplier-api
-
-          echo '${{ secrets.DOCKER_COMPOSE_CONTENT }}' > ~/final-project/docker-compose.yml
-
+          mkdir -p ~/final-project
           cd ~/final-project
+          
+          docker stop $(docker ps -a -q) || true
+          docker rm $(docker ps -a -q) || true
+          echo '${{ secrets.DOCKER_COMPOSE_CONTENT }}' > docker-compose.yml
 
           docker compose pull
 
