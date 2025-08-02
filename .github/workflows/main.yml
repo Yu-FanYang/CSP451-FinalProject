@@ -55,10 +55,10 @@ jobs:
           
           docker login ${{ secrets.ACR_LOGIN_SERVER }} -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }}
           
-          cd ~
-          mkdir -p final-project/supplier-api
-          
-          echo '${{ secrets.DOCKER_COMPOSE_CONTENT }}' > ~/final-project/supplier-api/docker-compose.yml
+          #cd ~
+          #mkdir -p final-project/supplier-api
+
+          echo '${{ secrets.DOCKER_COMPOSE_CONTENT }}' > ~/final-project/docker-compose.yml
 
           cd ~/final-project/supplier-api
 
