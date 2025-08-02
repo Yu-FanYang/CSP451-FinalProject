@@ -2,8 +2,11 @@ version: "3.8"
 
 services:
   supplier-api:
+    build:
+      context: ./supplier-api
+      dockerfile: Dockerfile
     image: yyang334acr.azurecr.io/supplier-api:latest 
-    container_name: ./supplier-api
+    #container_name: ./supplier-api
     restart: always
     ports:
       - "3000:3000" 
