@@ -1,32 +1,26 @@
 # .github/workflows/main.yml
 name: Build and Deploy Supplier-API to Azure VM
 
-# 當程式碼被推送到 main 分支時，觸發此流程
 on:
   push:
     branches: [ "main" ]
     paths:
-      - 'supplier-api/**' # 只在 supplier-api 目錄有變動時才觸發
+      - 'supplier-api/**' 
 
 jobs:
   build_and_push_to_acr:
     name: Build and Push Docker Image
-    runs-on: ubuntu-latest # 使用最新的 Ubuntu 環境來執行
+    runs-on: ubuntu-latest 
 
     steps:
-    # 步驟 1: 取得你的程式碼
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # 步驟 2: 登入 Azure
-    # 需要在 GitHub Secrets 中設定 AZURE_CREDENTIALS
     - name: Log in to Azure
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    # 步驟 3: 登入 Azure Container Registry (ACR)
-    # 需要在 GitHub Secrets 中設定 ACR_LOGIN_SERVER, ACR_USERNAME, ACR_PASSWORD
     - name: Log in to ACR
       uses: docker/login-action@v3
       with:
@@ -34,28 +28,22 @@ jobs:
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
 
-    # 步驟 4: 建置 Docker Image 並推送到 ACR
-    # 我們使用 GitHub SHA 作為圖片的標籤 (tag)，確保唯一性
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
-        context: ./supplier-api # Dockerfile 的路徑
+        context: ./supplier-api 
         push: true
         tags: ${{ secrets.ACR_LOGIN_SERVER }}/supplier-api:${{ github.sha }}
 
   deploy_to_vm:
     name: Deploy to Azure VM
     runs-on: ubuntu-latest
-    needs: build_and_push_to_acr # 等待 build_and_push_to_acr 任務成功後才執行
+    needs: build_and_push_to_acr 
 
     steps:
-    # 步驟 1: 取得你的程式碼 (為了 docker-compose.yml)
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # 步驟 2: 部署到 Azure VM
-    # 使用 SSH Action 連線到 VM 並執行指令
-    # 需要設定 VM_SSH_HOST, VM_SSH_USERNAME, VM_SSH_KEY
     - name: Deploy to VM
       uses: appleboy/ssh-action@master
       with:
@@ -63,25 +51,17 @@ jobs:
         username: ${{ secrets.VM_SSH_USERNAME }}
         key: ${{ secrets.VM_SSH_KEY }}
         script: |
-          # 登入 Azure CLI (如果需要的話，但通常 Service Principal 登入 ACR 更好)
           # az login --service-principal -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }} --tenant ${{ secrets.AZURE_TENANT_ID }}
           
-          # 登入 Azure Container Registry
           docker login ${{ secrets.ACR_LOGIN_SERVER }} -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }}
           
-          # 建立專案目錄 (如果不存在)
           cd ~
           mkdir -p final-project/supplier-api
           
-          # 將最新的 docker-compose.yml 複製到 VM
-          # 注意：這裡我們直接在 script 中創建它，更簡單
           echo '${{ secrets.DOCKER_COMPOSE_CONTENT }}' > ~/final-project/supplier-api/docker-compose.yml
 
-          # 進入專案目錄
           cd ~/final-project/supplier-api
 
-          # 拉取最新的 Image
           docker-compose pull
 
-          # 重新啟動服務，--no-deps 表示不重新啟動依賴的服務
           docker-compose up -d --no-deps supplier-api
