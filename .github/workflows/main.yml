@@ -33,7 +33,7 @@ jobs:
       with:
         context: ./supplier-api 
         push: true
-        tags: ${{ secrets.ACR_LOGIN_SERVER }}/supplier-api:${{ github.sha }}
+        tags: ${{ secrets.ACR_LOGIN_SERVER }}/supplier-api:latest
 
   deploy_to_vm:
     name: Deploy to Azure VM
