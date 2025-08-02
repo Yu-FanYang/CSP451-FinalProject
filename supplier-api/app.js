@@ -19,7 +19,9 @@ app.post('/order', (req, res) => {
 app.get('/', (req, res) => {
   res.send('Hello from Docker on Azure VM! This is version 2.0.<br>' +
             'Hello from Docker on Azure VM! This is version 2.0. add test CI<br>' +
-            'Hello from Docker on Azure VM! This is version 2.0. add test CI 2');
+            'Hello from Docker on Azure VM! This is version 2.0. add test CI 2<br>' +
+            'Hello from Docker on Azure VM! This is version 2.0. add test CI 3<br>'
+          );
 });
 
 app.listen(port, () => {
