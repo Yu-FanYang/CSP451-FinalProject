@@ -1,9 +1,16 @@
-# docker-compose.yml
-version: '3.8' # Docker Compose 的版本
+# 方便在 VM 上管理你的容器
+version: '3.8'
 
 services:
-  supplier-api: # 這是我們的供應商小房間
-    build: ./supplier-api # 告訴 Docker 去哪裡蓋這個房間
+  supplier-api:
+    # 這裡的 Image 名稱需要與 GitHub Actions 中 build 的名稱一致
+    # ${{ secrets.ACR_LOGIN_SERVER }}/supplier-api:${{ github.sha }}
+    # 我們在部署時會動態更新這個 image
+    image: your-acr-name.azurecr.io/supplier-api:latest # 初始可以先用 latest
+    container_name: supplier-api
+    restart: always
     ports:
-      - "3000:3000" # 把電腦的 3000 號門連到盒子裡的 3000 號門
-    restart: always # 讓這個房間一直開著
+      - "3000:3000" # 將 VM 的 3000 port 映射到容器的 3000 port
+    environment:
+      # 如果未來有需要，可以在這裡添加環境變數
+      - NODE_ENV=production

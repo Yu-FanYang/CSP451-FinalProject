@@ -1,7 +1,10 @@
 // index.js
+require('dotenv').config(); // let node js read .env file to decode "AZURE_STORAGE_CONNECTION_STRING"
+
 const { QueueClient } = require("@azure/storage-queue"); 
 const { v4: uuidv4 } = require('uuid'); 
 
+const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
 const queueName = "product-stock-events"; 
 const queueClient = new QueueClient(connectionString, queueName);
 
@@ -29,7 +32,6 @@ async function emitProductStockEvent(productName, currentStock) {
     console.log(`[Backend] Product ${productName} stock is fine (${currentStock}). No event emitted.`);
   }
 }
-
 
 async function simulateStockDecrease() {
   await emitProductStockEvent("Laptop", 5); 
