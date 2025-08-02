@@ -60,7 +60,7 @@ jobs:
 
           echo '${{ secrets.DOCKER_COMPOSE_CONTENT }}' > ~/final-project/docker-compose.yml
 
-          cd ~/final-project/supplier-api
+          cd ~/final-project
 
           docker compose pull
 
