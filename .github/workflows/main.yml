@@ -54,6 +54,8 @@ jobs:
           # az login --service-principal -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }} --tenant ${{ secrets.AZURE_TENANT_ID }}
           
           docker login ${{ secrets.ACR_LOGIN_SERVER }} -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }}
+
+          docker compose down --remove-orphans
           
           #cd ~
           #mkdir -p final-project/supplier-api
