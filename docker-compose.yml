@@ -1,0 +1,9 @@
+# docker-compose.yml
+version: '3.8' # Docker Compose 的版本
+
+services:
+  supplier-api: # 這是我們的供應商小房間
+    build: ./supplier-api # 告訴 Docker 去哪裡蓋這個房間
+    ports:
+      - "3000:3000" # 把電腦的 3000 號門連到盒子裡的 3000 號門
+    restart: always # 讓這個房間一直開著
