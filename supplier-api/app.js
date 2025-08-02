@@ -17,17 +17,9 @@ app.post('/order', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.send('Hello from Docker on Azure VM! This is version 2.0.');
-  res.send('Hello from Docker on Azure VM! This is version 2.0. add test CI');
-  res.send('Hello from Docker on Azure VM! This is version 2.0. add test CI 2');
-  res.send('Hello from Docker on Azure VM! This is version 2.0. add test CI 3');
-  res.send('Hello from Docker on Azure VM! This is version 2.0. add test CI 4');
-  res.send('Hello from Docker on Azure VM! This is version 2.0. add test CI 5');
-  res.send('Hello from Docker on Azure VM! This is version 2.0. add test CI 6');
-  res.send('Hello from Docker on Azure VM! This is version 2.0. add test CI 7');
-  res.send('Hello from Docker on Azure VM! This is version 2.0. add test CI 8');
-  res.send('Hello from Docker on Azure VM! This is version 2.0. add test CI 9');
-  res.send('Hello from Docker on Azure VM! This is version 2.0. add test CI 10');
+  res.send('Hello from Docker on Azure VM! This is version 2.0.<br>' +
+            'Hello from Docker on Azure VM! This is version 2.0. add test CI<br>' +
+            'Hello from Docker on Azure VM! This is version 2.0. add test CI 2');
 });
 
 app.listen(port, () => {
