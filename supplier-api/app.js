@@ -9,11 +9,13 @@ const EXPECTED_API_KEY = process.env.API_KEY || 'no-key-configured';
 const apiKeyAuth = (req, res, next) => {
   const userApiKey = req.get('x-api-key'); // from request header read 'x-api-key'
 
+  res.json({ message: `userApiKey ${userApiKey}, EXPECTED_API_KEY: ${EXPECTED_API_KEY}` }); 
+  
   if (userApiKey && userApiKey === EXPECTED_API_KEY) {
     next(); // Key ok
   } else {
     // key error, return 401
-    res.status(401).json({ error: 'Unauthorized. Invalid or missing API Key.' });
+    res.status(401).json({ error: 'Unauthorized. Invalid or missing API Key.', message: `userApiKey ${userApiKey}, EXPECTED_API_KEY: ${EXPECTED_API_KEY}` });
   }
 };
 
