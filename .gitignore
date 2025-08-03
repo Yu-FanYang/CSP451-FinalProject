@@ -11,6 +11,8 @@ Publish
 *.Cache
 project.lock.json
 
+AzureKeyVault.txt
+.vscode/*
 /final_project
 /test-function-app
 /doc

@@ -64,6 +64,9 @@ jobs:
           docker rm $(docker ps -a -q) || true
           echo '${{ secrets.DOCKER_COMPOSE_CONTENT }}' > docker-compose.yml
 
+          # add supplier_API_KEY
+          echo "API_KEY=${{ secrets.SUPPLIER_API_KEY }}" > .env
+          
           docker compose pull
 
           docker compose up -d --no-deps supplier-api
