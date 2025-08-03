@@ -4,7 +4,7 @@ const app = express();
 const port = 3000; 
 
 // add API Key
-const EXPECTED_API_KEY = process.env.API_KEY;
+const EXPECTED_API_KEY = process.env.API_KEY || 'no-key-configured';
 
 const apiKeyAuth = (req, res, next) => {
   const userApiKey = req.get('x-api-key'); // from request header read 'x-api-key'
@@ -13,7 +13,7 @@ const apiKeyAuth = (req, res, next) => {
     next(); // Key ok
   } else {
     // key error, return 401
-    res.status(401).json({ error: 'Unauthorized. Invalid or missing API Key.', message: `get userApiKey: ${userApiKey}` });
+    res.status(401).json({ error: 'Unauthorized. Invalid or missing API Key.' });
   }
 };
 
