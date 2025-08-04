@@ -11,44 +11,82 @@
 ## Security measures
 
 
-## Task1: System Architecture
-### 1. Minimum 3 Docker services (e.g., frontend, inventory API, product service)
-### 2. Azure Function App(s) with:
-- HTTP triggers (e.g., manual reorder)
-- Queue triggers (e.g., stock events)
-- Timer triggers (e.g., daily summary)
-### 3. Event-driven communication using:
-- Azure Storage Queues, Service Bus, or Event Grid
+### Steps of Deployment
+Event-driven communication using Azure Storage Queues
+1.	Build the Storage Queue based on the step from Milestone 3
+2.	Created Queue trigger
+•	func init --worker-runtime node --model V4 --docker
+•	func new --name ProcessStockEvent --template AzureQueueStorageTrigger --language JavaScript
+3.	Use Azure Monitor to trace end-to-end flow
+•	Enable Azure Monitor traceability from Azure portal
+•	Azure portal> Monitor > Virtual Machine > Enable
 
-I choose Azure Storage Queue to implement this project.
+4.	Trace log output from Function app
+•	From Function app > Log Stream > shows “Connected” to make sure Function app is working
+•	Run node index.js on local machine to emit event to Azure Function by Azure storage Queue
+5.	Check log output from Backend, Function App, and Supplier API with correlation ID
+•	Function App and Backend log with matching correlation ID
+•	Run the following command to retrieve log from Frontend: sudo nano /var/lib/docker/containers/459964c9a6bec01576ebd8f06b3b83b6d7e1da7d02c39289e23094bfe62f2a88/459964c9a6bec01576ebd8f06b3b83b6d7e1da7d02c39289e23094bfe62f2a88-json.log
+•	Frontend log with matching correlation ID
 
-
-
-
-
-
-## Task2: CI/CD Automation
-### 1. Use GitHub Actions, Azure Pipelines, or GitLab CI to:
-- Build Docker images
-- Push to Azure Container Registry (optional)
-- Deploy services to VM, Web Apps, or AKS
-- Deploy Azure Functions
-### 2. Show multi-stage pipeline with test, build, and deploy steps
-
-## Task3: Security
-### 1. Secure secrets using Azure Key Vault
-### 2. Enable HTTPS endpoints
-### 3. Implement basic token-based or API key authentication
-### 4. Restrict Function App or API access using IP rules or policies (optional)
-
-## Task4: Monitoring and Logging
-### 1. Centralize all logs (frontend, backend, functions) via:
-- Azure Monitor
-- Application Insights
-- Log Analytics
- ### 2. Enable structured logging and correlation ID tracing
-- Configure alerts, dashboards, or custom metrics
-
+### Use GitHub Actions and Azure Pipelines to achieve CI/CD Automation
+1.	Build Docker images 
+•	Run the following commands to install docker-compose
+  sudo apt-get update
+  sudo apt-get install ca-certificates curl gnupg lsb-release
+  sudo mkdir -m 0755 -p /etc/apt/keyrings
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  echo \ "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  sudo apt-get update
+  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  sudo usermod -aG docker azureuser
+2.	Push Docker image to Azure Container Registry
+•	Create Azure Container Registry (ACR)
+•	Go to Settings> Access keys> enable “Admin user” and record the following information
+•	Registry name, Login server, Username, and Password
+3.	Create Service Principal on Azure portal
+•	Run the following script to create Service Principal
+$SUB_ID="368b377b-8a10-4c39-9d38-e984c2696eea"
+$RGN="csp451-yyang334"
+az ad sp create-for-rbac --name "GitHubActionsServicePrincipal" --role contributor --scopes /subscriptions/$SUB_ID/resourceGroups/$RGN --sdk-auth
+•	Go to GitHub to set up access permissions
+•	Set up the following secrets on GitHub > Secrets and variables > Actions
+o	AZURE_CREDENTIALS
+o	ACR_LOGIN_SERVER
+o	ACR_USERNAME
+o	ACR_PASSWORD
+o	VM_SSH_HOST
+o	VM_SSH_USERNAME
+o	VM_SSH_KEY
+o	DOCKER_COMPOSE_CONTENT: copy the content from supplier-api/docker-compose.yml file
+4.	Create main.yml file and deploy services to VM
+•	Refer to Appendix E for main.yml file
+•	The main.yml file will do the following jobs:
+o	Use the variables from the secrets
+o	Auto login Azure to achieve automation process
+o	Build and push Docker image
+o	Deploy ACR to virtual machine
+5.	Test CI/CD functionality 
+•	Result show GitHub CICD can auto deploy to Azure VM
+•	After committing ec1506 from GitHub, it is deployed to VM with the same corresponding number
+•	Highlighted area showed success
+Show multi-stage pipeline with test, build, and deploy steps
+•	Modify supplier-api on local machine > commit to GitHub > CI/CD flow to auto deploy based on main.yml file
+### Security
+1.	Secure secrets using Azure Key Vault
+•	Create Azure Key Vault on Azure portal 
+2.	Create the following 3 secrets
+•	AzureStorageConnectionString
+•	SupplierApiUrl : Get the public IP from VM
+•	Define SupplierApiKey
+3.	Implement basic token-based or API key authentication
+•	Copy the Secret identifiers from the Secrets above
+•	Create Environment variables in Function app with the identifiers
+•	Create variables for the secrets
+4.	Restrict Function App or API access using IP rules or policies
+•	Add variables in Azure Function App
+•	Modify supplier-api script and mapping to Key “SupplierApiKey” to restrict Function App access
 
 
 ### Source code
@@ -71,6 +109,8 @@ services:
 ```
 
 - Appendix B: ProcessStockEvent.js
+
+``` javascript
 const { app } = require('@azure/functions');
 const axios = require('axios');
 
