@@ -37,15 +37,17 @@ Continue based on the architecture from Milestone 3
 ### Use GitHub Actions and Azure Pipelines to achieve CI/CD Automation
 1.	Build Docker images 
 - Run the following commands to install docker-compose
-  `sudo apt-get update`
-  `sudo apt-get install ca-certificates curl gnupg lsb-release`
-  `sudo mkdir -m 0755 -p /etc/apt/keyrings`
-  `curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg`
-  `echo \ "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \`
-  `$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null`
-  `sudo apt-get update`
-  `sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin`
-  `sudo usermod -aG docker azureuser`
+``` javascript
+  sudo apt-get update
+  sudo apt-get install ca-certificates curl gnupg lsb-release
+  sudo mkdir -m 0755 -p /etc/apt/keyrings
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  echo \ "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  sudo apt-get update
+  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  sudo usermod -aG docker azureuser
+```
 2.	Push Docker image to Azure Container Registry
 - Create Azure Container Registry (ACR)
 - Go to Settings> Access keys> enable “Admin user” and record the following information
@@ -60,14 +62,14 @@ az ad sp create-for-rbac --name "GitHubActionsServicePrincipal" --role contribut
 4. Note down clientId, clientSecret, subscriptionId, and tenantId
 5. Go to GitHub to set up access permissions
 - Set up the following secrets on GitHub > Secrets and variables > Actions
-o	AZURE_CREDENTIALS
-o	ACR_LOGIN_SERVER
-o	ACR_USERNAME
-o	ACR_PASSWORD
-o	VM_SSH_HOST
-o	VM_SSH_USERNAME
-o	VM_SSH_KEY
-o	DOCKER_COMPOSE_CONTENT: copy the content from supplier-api/docker-compose.yml file
+- AZURE_CREDENTIALS
+- ACR_LOGIN_SERVER
+- ACR_USERNAME
+- ACR_PASSWORD
+- VM_SSH_HOST
+- VM_SSH_USERNAME
+- VM_SSH_KEY
+- DOCKER_COMPOSE_CONTENT: copy the content from supplier-api/docker-compose.yml file
 6. Create main.yml file and deploy services to VM
 - Refer to Appendix E for main.yml file
 - The main.yml file will do the following jobs:
