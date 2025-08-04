@@ -1,16 +1,16 @@
 # CSP451-FinalProject
 
-
-
-
 ## Overview of system
-## Setup instructions (manual and via CI/CD
-## Service roles and communication
+
+
+
 ## Queue/event message formats
-## Log sample with correlation ID
-## Security measures
+- Message format from backend: *product: ${productName}
+  Stock: ${currentStock}
+  Correlation ID: ${correlationId}*
+- Define a header for Functionapp and supplier-api communication: x-api-key: supplierApiKey
 
-
+## Setup instructions (manual and via CI/CD
 ### Steps of Deployment
 Event-driven communication using Azure Storage Queues
 1.	Build the Storage Queue based on the step from Milestone 3
@@ -67,13 +67,15 @@ o	Use the variables from the secrets
 o	Auto login Azure to achieve automation process
 o	Build and push Docker image
 o	Deploy ACR to virtual machine
-5.	Test CI/CD functionality 
+5.	Test CI/CD functionality (## Log sample with correlation ID)
 •	Result show GitHub CICD can auto deploy to Azure VM
 •	After committing ec1506 from GitHub, it is deployed to VM with the same corresponding number
+* refer to the screenshot in the document for correlation ID
+* 
 •	Highlighted area showed success
 Show multi-stage pipeline with test, build, and deploy steps
 •	Modify supplier-api on local machine > commit to GitHub > CI/CD flow to auto deploy based on main.yml file
-### Security
+### Security measures
 1.	Secure secrets using Azure Key Vault
 •	Create Azure Key Vault on Azure portal 
 2.	Create the following 3 secrets
