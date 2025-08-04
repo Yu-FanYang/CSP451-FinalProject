@@ -8,7 +8,7 @@
 - Message format from backend: *product: ${productName}
   Stock: ${currentStock}
   Correlation ID: ${correlationId}*
-- Define a header for Functionapp and supplier-api communication: x-api-key: supplierApiKey
+- Define a header for Functionapp and supplier-api communication: `x-api-key: supplierApiKey`
 
 ## Setup instructions (manual and via CI/CD
 ### Steps of Deployment
