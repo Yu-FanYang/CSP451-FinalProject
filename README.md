@@ -73,10 +73,10 @@ az ad sp create-for-rbac --name "GitHubActionsServicePrincipal" --role contribut
 6. Create main.yml file and deploy services to VM
 - Refer to Appendix E for main.yml file
 - The main.yml file will do the following jobs:
-o	Use the variables from the secrets
-o	Auto login Azure to achieve automation process
-o	Build and push Docker image
-o	Deploy ACR to virtual machine
+- Use the variables from the secrets
+- Auto login Azure to achieve automation process
+- Build and push Docker image
+- Deploy ACR to virtual machine
 7. Test CI/CD functionality (## Log sample with correlation ID)
 - Result show GitHub CICD can auto deploy to Azure VM
 - After committing ec1506 from GitHub, it is deployed to VM with the same corresponding number (refer to the screenshot in the document for correlation ID)
